@@ -27,8 +27,9 @@ class IpCalculationService implements IpCalculationInterface
     {
         $viewModel = new NetworkViewModel();
 
-        $networkAddress = $this->calculateNetworkAddressIpv6($ip, $prefix);
-        $firstAddress = $this->calculateFirstAddressIpv6($networkAddress);
+        // I am pretty sure Network addresses work a bit differnt than in ipv4 
+        // because it uses a range of addresses, so I've set it the same as the "firstAddress"
+        $networkAddress = $firstAddress = $this->calculateFirstAddressIpv6($ip, $prefix); 
         $lastAddress = $this->calculateLastAddressIpv6($networkAddress, $prefix);
         $totalHosts = $this->calculateTotalHostsIpv6($prefix);
         
@@ -93,32 +94,110 @@ class IpCalculationService implements IpCalculationInterface
         return long2ip($lastAddressBinaryString);
     }
 
-    private function calculateTotalHostsIpv4(string $prefix): int
+    private function calculateTotalHostsIpv4(string $prefix): string
     {
         // Calculate available hosts by 2 raised to the power of prefix (available hosts)
+        // 32 is the amount of bits a ipv6 can have
         // (32 - prefix)^2
         // -2 available for network it self and broadcast
         return pow(2, 32 - intval($prefix)) - 2;
     }
 
-    private function calculateNetworkAddressIpv6(string $ip, string $prefix): string
+    public function calculateFirstAddressIpv6(string $ip, string $prefix): string
     {
-        return $ip;
+        // Convert to 16byte binary string
+        $ipBinaryString = inet_pton($ip);
+
+        $subnetMaskBinaryString = $this->calculateMask($prefix);
+
+        // Perform bitwise AND to get network address
+        $networkAddressBinaryString = $this->binaryStringBitwiseAnd($ipBinaryString, $subnetMaskBinaryString);
+
+        return inet_ntop($networkAddressBinaryString);
     }
 
-    private function calculateFirstAddressIpv6(string $networkAddress): string
+    private function calculateMask(string $prefix)
     {
-        return $networkAddress; 
+        // Add full bytes of 0xff for the amount prefix is dividable by 8
+        $mask = str_repeat("\xff", intdiv($prefix, 8));
+
+        // Check for a partial byte (if prefix isn't fully dividable by 8)
+        if ($prefix % 8 > 0) {
+            $mask .= chr(0xff << (8 - ($prefix % 8))); // Shift remaining bits
+        }
+        $mask .= str_repeat("\x00", 16 - strlen($mask)); // calculate bytes and add remaining 00
+    
+        return $mask;
     }
 
     private function calculateLastAddressIpv6(string $networkAddress, string $prefix): string
     {
-        // Implement IPv6 last address calculation
-        return $networkAddress; // Placeholder, needs specific implementation
+        // Convert network address to binary string
+        $networkBinaryString = inet_pton($networkAddress);
+
+        $inverseSubnetMaskBinaryString = $this->calculateInverseMask($prefix);
+
+        // Calculate the last address
+        $lastAddressBinaryString = $this->binaryStringBitwiseOr($networkBinaryString, $inverseSubnetMaskBinaryString);
+        
+        // Convert binary string back to IPv6 address
+        return inet_ntop($lastAddressBinaryString);
     }
 
-    private function calculateTotalHostsIpv6(string $prefix): int
+    private function calculateInverseMask(int $prefix): string
     {
+        // Add empty bytes of 0x00 for the amount prefix is dividable by 8
+        $inverseMask = str_repeat("\x00", intdiv($prefix, 8));
+
+        // Check for a partial byte (if prefix isn't fully dividable by 8)
+        if ($prefix % 8 > 0) {
+            $inverseMask .= chr(0xff >> ($prefix % 8));
+        }
+
+        // Add full bytes 0xff untill it is 16 bytes long
+        $inverseMask .= str_repeat("\xff", 16 - strlen($inverseMask));
+
+        return $inverseMask;
+    }
+
+    private function binaryStringBitwiseAnd(string $string1, string $string2): string
+    {
+        $result = '';
+
+        // check in each byte if bits in both strings are set to 1 if not bit is set to 0
+        // example
+        // string1[0] = \xF0 = 240 == 11110000
+        // string2[0] = \xAA = 170 == 10101010
+        // $result    =   A0 = 160 == 10100000
+        for ($i = 0; $i < strlen($string1); $i++) {
+            $result .= chr(ord($string1[$i]) & ord($string2[$i]));
+        }
+        return $result;
+    }
+
+
+    private function binaryStringBitwiseOr(string $a, string $b): string
+    {
+        $result = '';
+
+        // check in each byte if a bit is set to 1 if so it returns a 1 for that bit
+        // example
+        // string1[0] = \xF0 = 240 == 11110000
+        // string2[0] = \xAA = 170 == 10101010
+        // $result    =   A0 = 160 == 11111010
+        for ($i = 0; $i < strlen($a); $i++) {
+            $result .= chr(ord($a[$i]) | ord($b[$i]));
+        }
+
+        return $result;
+    }
+
+    private function calculateTotalHostsIpv6(string $prefix): string
+    {
+        // Calculate available hosts by 2 raised to the power of prefix (available hosts)
+        // 128 is the amount of bits a ipv6 can have
+        // (128 - prefix)^2
         return pow(2, 128 - intval($prefix));
     }
+
 }

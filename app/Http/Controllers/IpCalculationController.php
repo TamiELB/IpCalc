@@ -37,13 +37,13 @@ class IpCalculationController extends Controller
         $viewModel = new NetworkViewModel;
 
         // Validate Ip and Prefix for that Ip type
-        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false || ($prefix < 1 || $prefix > 32))
-            $viewModel = $this->ipCalculationService ->SubnetInfoByIpv4($ip, $prefix);
-        else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false || ($prefix < 1 || $prefix > 128))
-            $viewModel = $this->ipCalculationService ->SubnetInfoByIpv4($ip, $prefix);
-        else
-            return response()->json(['error' => 'Ip is invalid'], 400);
-
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false && ($prefix >= 1 && $prefix <= 32)) 
+            $viewModel = $this->ipCalculationService->SubnetInfoByIpv4($ip, $prefix);
+         else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false && ($prefix >= 1 && $prefix <= 128)) 
+            $viewModel = $this->ipCalculationService->SubnetInfoByIpv6($ip, $prefix);
+        else 
+            return response()->json(['error' => 'IP is invalid'], 400);
+        
         return response()->json($viewModel);
     }
 }
