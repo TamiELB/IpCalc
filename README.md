@@ -1,5 +1,7 @@
 Getting Started
 
+You need to have installed:
+
 PHP latest version
 Composer
 Node.js (>= 14.x)
