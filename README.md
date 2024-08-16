@@ -6,10 +6,8 @@ Node.js and npm
 Getting Started
 
 1. Clone the repository:
-bash
-Copy code
-git clone https://github.com/your-username/your-repository.git
-cd your-repository
+git clone https://github.com/TamiELB/IpCalc.git
+cd IpCalc
 
 2. Install PHP dependencies:
 composer install
