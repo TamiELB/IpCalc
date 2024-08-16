@@ -43,7 +43,7 @@ class IpCalculationController extends Controller
             $viewModel = $this->ipCalculationService->SubnetInfoByIpv6($ip, $prefix);
         else 
             return response()->json(['error' => 'IP is invalid'], 400);
-        
+
         return response()->json($viewModel);
     }
 }

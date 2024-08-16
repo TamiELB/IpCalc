@@ -100,7 +100,7 @@ class IpCalculationService implements IpCalculationInterface
         // 32 is the amount of bits a ipv6 can have
         // (32 - prefix)^2
         // -2 available for network it self and broadcast
-        return pow(2, 32 - intval($prefix)) - 2;
+        return max(pow(2, 32 - intval($prefix)) - 2, 0);
     }
 
     public function calculateFirstAddressIpv6(string $ip, string $prefix): string

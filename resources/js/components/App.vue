@@ -1,7 +1,11 @@
 <template>
   <div class="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-    <div class="flex space-x-4 mb-4">
+    <!-- Error Message -->
+    <div v-if="errorMessage" class="mb-4 px-4 py-2 text-red-600 bg-red-100 border border-red-300 rounded-lg">
+      {{ errorMessage }}
+    </div>
 
+    <div class="flex space-x-4 mb-4">
       <input 
         v-model="inputValue"
         type="text" 
@@ -54,30 +58,32 @@
 <script setup>
 import { ref } from 'vue';
 
-// Create refs for input value and fetched data
 const inputValue = ref('');
+const errorMessage = ref('');
 const data = ref(null);
 
-// Function to fetch data from API
 const fetchData = async () => {
-  // Define the URL for the API endpoint
   const url = `/api/IpCalculation?IP=${encodeURIComponent(inputValue.value)}`;
 
   try {
     const response = await fetch(url);
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+    if (response.ok) {
+      const result = await response.json();
+
+      data.value = result;
+
+      // Remove error message
+      errorMessage.value = '';
     }
+    else 
+    {
 
-    // Parse the JSON from the response
-    const result = await response.json();
-    console.log(result);
-
-    // Store the result if needed
-    data.value = result;
+      const error = await response.json();
+      console.error('Failed to fetch data', error);
+      errorMessage.value = error.error || 'An error occurred';
+    }
   } catch (err) {
-    // Handle any errors that occur during the fetch
     console.error('Failed to fetch data', err);
   }
 };
