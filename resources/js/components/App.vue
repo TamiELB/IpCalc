@@ -54,7 +54,6 @@
   // Create a ref for the input value
   const inputValue = ref('');
   const data = ref(null);
-  const error = ref(null);
   
  const fetchData = async () => {
   // Define the URL for the API endpoint and use template literals or string concatenation
@@ -63,21 +62,22 @@
   try {
     // Send a GET request with the constructed URL
     const response = await fetch(url);
+
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
 
-    // Parse the JSON from the response
-    const result = await response.json();
-    console.log(result);
+      // Parse the JSON from the response
+      const result = await response.json();
+      console.log(result);
 
-    // Store the result if needed
-    data.value = result;
-  } catch (err) {
-    // Handle any errors that occur during the fetch
-    error.value = 'Failed to fetch data';
-    console.error(err);
-  }
+      // Store the result if needed
+      data.value = result;
+    } catch (err) {
+      // Handle any errors that occur during the fetch
+      error.value = 'Failed to fetch data';
+      console.error(err);
+    }
 };
 
   </script>
