@@ -10,10 +10,10 @@ class IpCalculationService implements IpCalculationInterface
     {
         $viewModel = new NetworkViewModel();
 
-        $networkAddress = $this->calculateNetworkAddressIpv4($ip, $prefix);
-        $firstAddress = $this->calculateFirstAddressIpv4($networkAddress);
-        $lastAddress = $this->calculateLastAddressIpv4($networkAddress, $prefix);
-        $totalHosts = $this->calculateTotalHostsIpv4($prefix);
+        $networkAddress = $this->CalculateNetworkAddressIpv4($ip, $prefix);
+        $firstAddress = $this->CalculateFirstAddressIpv4($networkAddress);
+        $lastAddress = $this->CalculateLastAddressIpv4($networkAddress, $prefix);
+        $totalHosts = $this->CalculateTotalHostsIpv4($prefix);
         
         $viewModel->network = $networkAddress;
         $viewModel->first = $firstAddress;
@@ -41,7 +41,7 @@ class IpCalculationService implements IpCalculationInterface
         return $viewModel;
     }
 
-    private function calculateNetworkAddressIpv4(string $ip, string $prefix): string
+    private function CalculateNetworkAddressIpv4(string $ip, string $prefix): string
     {
         // Convert to binary integer example:
         // 192.168.1.10 == (3232235786 decimal) == 11000000 10101000 00000001 00001010 (binary)
@@ -63,13 +63,13 @@ class IpCalculationService implements IpCalculationInterface
         return long2ip($networkAddressBinaryString);
     }
 
-    private function calculateFirstAddressIpv4(string $networkAddress): string
+    private function CalculateFirstAddressIpv4(string $networkAddress): string
     {
         // First addres is for the subnet it self
         return long2ip(ip2long($networkAddress) + 1);
     }
 
-    private function calculateLastAddressIpv4(string $networkAddress, string $prefix): string
+    private function CalculateLastAddressIpv4(string $networkAddress, string $prefix): string
     {
         // Convert to binary integer example:
         // 192.168.1.10 == (3232235786 decimal) == 11000000 10101000 00000001 00001010 (binary)
@@ -94,7 +94,7 @@ class IpCalculationService implements IpCalculationInterface
         return long2ip($lastAddressBinaryString);
     }
 
-    private function calculateTotalHostsIpv4(string $prefix): string
+    private function CalculateTotalHostsIpv4(string $prefix): string
     {
         // Calculate available hosts by 2 raised to the power of prefix (available hosts)
         // 32 is the amount of bits a ipv6 can have
@@ -103,7 +103,7 @@ class IpCalculationService implements IpCalculationInterface
         return max(pow(2, 32 - intval($prefix)) - 2, 0);
     }
 
-    public function calculateFirstAddressIpv6(string $ip, string $prefix): string
+    public function CalculateFirstAddressIpv6(string $ip, string $prefix): string
     {
         // Convert to 16byte binary string
         $ipBinaryString = inet_pton($ip);
@@ -116,7 +116,7 @@ class IpCalculationService implements IpCalculationInterface
         return inet_ntop($networkAddressBinaryString);
     }
 
-    private function calculateMask(string $prefix)
+    private function CalculateMask(string $prefix)
     {
         // Add full bytes of 0xff for the amount prefix is dividable by 8
         $mask = str_repeat("\xff", intdiv($prefix, 8));
@@ -130,7 +130,7 @@ class IpCalculationService implements IpCalculationInterface
         return $mask;
     }
 
-    private function calculateLastAddressIpv6(string $networkAddress, string $prefix): string
+    private function CalculateLastAddressIpv6(string $networkAddress, string $prefix): string
     {
         // Convert network address to binary string
         $networkBinaryString = inet_pton($networkAddress);
@@ -144,7 +144,7 @@ class IpCalculationService implements IpCalculationInterface
         return inet_ntop($lastAddressBinaryString);
     }
 
-    private function calculateInverseMask(int $prefix): string
+    private function CalculateInverseMask(int $prefix): string
     {
         // Add empty bytes of 0x00 for the amount prefix is dividable by 8
         $inverseMask = str_repeat("\x00", intdiv($prefix, 8));
@@ -160,7 +160,7 @@ class IpCalculationService implements IpCalculationInterface
         return $inverseMask;
     }
 
-    private function binaryStringBitwiseAnd(string $string1, string $string2): string
+    private function BinaryStringBitwiseAnd(string $string1, string $string2): string
     {
         $result = '';
 
@@ -176,7 +176,7 @@ class IpCalculationService implements IpCalculationInterface
     }
 
 
-    private function binaryStringBitwiseOr(string $a, string $b): string
+    private function BinaryStringBitwiseOr(string $a, string $b): string
     {
         $result = '';
 
@@ -192,7 +192,7 @@ class IpCalculationService implements IpCalculationInterface
         return $result;
     }
 
-    private function calculateTotalHostsIpv6(string $prefix): string
+    private function CalculateTotalHostsIpv6(string $prefix): string
     {
         // Calculate available hosts by 2 raised to the power of prefix (available hosts)
         // 128 is the amount of bits a ipv6 can have
