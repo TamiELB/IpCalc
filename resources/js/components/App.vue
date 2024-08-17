@@ -32,19 +32,19 @@
       <tbody>
         <tr v-if="data">
           <td class="border border-gray-300 px-4 py-2">Network</td>
-          <td class="border border-gray-300 px-4 py-2 text-center text-blue-500">{{ data.network }}</td>
+          <td class="border border-gray-300 px-4 py-2 text-center text-blue-500">{{ data.networkAddress }}</td>
         </tr>
         <tr v-if="data">
           <td class="border border-gray-300 px-4 py-2">First Address</td>
-          <td class="border border-gray-300 px-4 py-2 text-center text-blue-500">{{ data.first }}</td>
+          <td class="border border-gray-300 px-4 py-2 text-center text-blue-500">{{ data.firstAddress }}</td>
         </tr>
         <tr v-if="data">
           <td class="border border-gray-300 px-4 py-2">Last Address</td>
-          <td class="border border-gray-300 px-4 py-2 text-center text-blue-500">{{ data.last }}</td>
+          <td class="border border-gray-300 px-4 py-2 text-center text-blue-500">{{ data.lastAddress }}</td>
         </tr>
         <tr v-if="data">
           <td class="border border-gray-300 px-4 py-2">Total Hosts</td>
-          <td class="border border-gray-300 px-4 py-2 text-center text-blue-500">{{ data.hosts }}</td>
+          <td class="border border-gray-300 px-4 py-2 text-center text-blue-500">{{ data.usableHosts }}</td>
         </tr>
         <!-- Optionally show a message if no data is available -->
         <tr v-if="!data">
@@ -78,9 +78,10 @@ const fetchData = async () => {
     }
     else 
     {
-
       const error = await response.json();
+
       console.error('Failed to fetch data', error);
+      
       errorMessage.value = error.error || 'An error occurred';
     }
   } catch (err) {

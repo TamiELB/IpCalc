@@ -4,8 +4,8 @@ namespace App\ViewModels;
 
 class NetworkViewModel
 {
-    public $network;
-    public $first;
-    public $last;
-    public $hosts;
+    public $networkAddress;
+    public $firstAddress;
+    public $lastAddress;
+    public $usableHosts;
 }

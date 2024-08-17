@@ -13,12 +13,12 @@ class IpCalculationService implements IpCalculationInterface
         $networkAddress = $this->CalculateNetworkAddressIpv4($ip, $prefix);
         $firstAddress = $this->CalculateFirstAddressIpv4($networkAddress);
         $lastAddress = $this->CalculateLastAddressIpv4($networkAddress, $prefix);
-        $totalHosts = $this->CalculateTotalHostsIpv4($prefix);
+        $totalHosts = $this->CalculateUsableHostsIpv4($prefix);
         
-        $viewModel->network = $networkAddress;
-        $viewModel->first = $firstAddress;
-        $viewModel->last = $lastAddress;
-        $viewModel->hosts = $totalHosts;
+        $viewModel->networkAddress = $networkAddress;
+        $viewModel->firstAddress = $firstAddress;
+        $viewModel->lastAddress = $lastAddress;
+        $viewModel->usableHosts = $totalHosts;
         
         return $viewModel;
     }
@@ -31,12 +31,12 @@ class IpCalculationService implements IpCalculationInterface
         // because it uses a range of addresses, so I've set it the same as the "firstAddress"
         $networkAddress = $firstAddress = $this->calculateFirstAddressIpv6($ip, $prefix); 
         $lastAddress = $this->calculateLastAddressIpv6($networkAddress, $prefix);
-        $totalHosts = $this->calculateTotalHostsIpv6($prefix);
+        $totalHosts = $this->CalculateUsableHostsIpv6($prefix);
         
-        $viewModel->network = $networkAddress;
-        $viewModel->first = $firstAddress;
-        $viewModel->last = $lastAddress;
-        $viewModel->hosts = $totalHosts;
+        $viewModel->networkAddress = $networkAddress;
+        $viewModel->firstAddress = $firstAddress;
+        $viewModel->lastAddress = $lastAddress;
+        $viewModel->usableHosts = $totalHosts;
         
         return $viewModel;
     }
@@ -94,7 +94,7 @@ class IpCalculationService implements IpCalculationInterface
         return long2ip($lastAddressBinaryString);
     }
 
-    private function CalculateTotalHostsIpv4(string $prefix): string
+    private function CalculateUsableHostsIpv4(string $prefix): string
     {
         // Calculate available hosts by 2 raised to the power of prefix (available hosts)
         // 32 is the amount of bits a ipv6 can have
@@ -192,7 +192,7 @@ class IpCalculationService implements IpCalculationInterface
         return $result;
     }
 
-    private function CalculateTotalHostsIpv6(string $prefix): string
+    private function CalculateUsableHostsIpv6(string $prefix): string
     {
         // Calculate available hosts by 2 raised to the power of prefix (available hosts)
         // 128 is the amount of bits a ipv6 can have
