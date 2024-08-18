@@ -1,55 +1,67 @@
-Getting Started
+## Getting Started
 
-You need to have installed:
+**Ensure you have the following installed:**
 
-PHP latest version
-Composer
-Node.js (>= 14.x)
-npm
+- PHP (latest version)
+- Composer
+- Node.js (version 14.x or later)
+- npm
 
-1. Clone the Repository
-git clone https://github.com/TamiELB/IpCalc.git
+### 1. Clone the Repository
 
-cd IpCalc
+Open your terminal and run the following command to clone the repository:
 
-2. Set Up the Laravel Backend
-Install PHP Dependencies
+    git clone https://github.com/TamiELB/IpCalc.git
 
-`composer install`
+Then navigate into the project directory:
 
-Set Up the Environment File
+    cd IpCalc
 
-Copy the example environment file to create your own .env file:
+### 2. Set Up the Laravel Backend
 
-`cp .env.example .env`
+- **Install PHP Dependencies**
 
-Generate the Application Key
+  In the project directory, run:
 
-`php artisan key:generate`
+    `composer install`
 
-Configure Your Database
+- **Set Up the Environment File**
 
-Edit the .env file to set up your database connection and other environment variables.
+  Create your own environment file by copying the example file:
 
-Run Migrations
+    `cp .env.example .env`
 
-`php artisan migrate`
+- **Generate the Application Key**
 
-Install Node.js Dependencies
+  Generate the application key by running:
 
-`npm install`
-or
-`yarn install`
+    `php artisan key:generate`
 
-3. Run the Development Servers
-Start the Laravel Development Server
+- **Run Migrations**
 
-`php artisan serve`
+  Set up the database schema by running:
 
-By default, it will run on http://localhost:8000.
+    `php artisan migrate`
 
-Start the Vue.js Development Server
+- **Install Node.js Dependencies**
 
-npm run dev
+  Install the required Node.js packages using npm:
 
-Visit [http://127.0.0.1:8000] in your browser to see the application in action.
+    `npm install`
+
+### 3. Run the Development Servers
+
+- **Start the Laravel Development Server**
+
+  Start the Laravel development server with:
+
+    `php artisan serve`
+
+
+- **Start the Vue.js Development Server**
+
+  To start the Vue.js development server, run:
+
+    `npm run dev`
+
+  You can now visit [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser to see the application in action.
