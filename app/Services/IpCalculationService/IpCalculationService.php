@@ -97,7 +97,7 @@ class IpCalculationService implements IpCalculationInterface
     private function CalculateUsableHostsIpv4(string $prefix): string
     {
         // Calculate available hosts by 2 raised to the power of prefix (available hosts)
-        // 32 is the amount of bits a ipv6 can have
+        // 32 is the amount of bits a ipv4 can have
         // (32 - prefix)^2
         // -2 available for network it self and broadcast
         return max(pow(2, 32 - intval($prefix)) - 2, 0);
