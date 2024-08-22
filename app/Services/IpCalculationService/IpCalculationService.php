@@ -47,9 +47,9 @@ class IpCalculationService implements IpCalculationInterface
         // 192.168.1.10 == (3232235786 decimal) == 11000000 10101000 00000001 00001010 (binary)
         $ipBinaryString = ip2long($ip); 
         
-        // -1 << for shifting bits to the right side
-        // (32 - $prefix) == amount of times the bits will shift to the right
-        // prefix of 3 (shifts 32 - 3 times) == 11111111 11111111 11111111 11111000
+        // -1 creates a 32-bit integer were all bits a set to 1 == 11111111 11111111 11111111 11111111
+        // (32 - $prefix) == amount of times the bits will shift to the left 
+        // prefix of 29 == 32 - 29 == 3 shifts == Removed(111) 11111111 11111111 11111111 11111000
         $subnetMaskBinaryString = -1 << (32 - $prefix);
 
         // Bitwise (AND) operation
@@ -78,10 +78,10 @@ class IpCalculationService implements IpCalculationInterface
         // Number of bits available for hosts
         $hostBits = 32 - $prefix;
 
-        // Inverse Subnet and leave last address for (Broadcast)
-        // 1 << for shifting bits to the left side 
-        // $hostBits = amount of times it shifts
-        // -1 to leave last address for broadcast
+        // 1 is the inital bit in the 32 bit int
+        // << $hostBits is for the amount of times that 1 shifts to the left
+        // $hostBits is 0 == ... 000000001 $hostBits is 4 == ... 000010000
+        // -1 Deducts the Initial bit so 000010000 turns into 00001111
         $inverseSubnet = (1 << $hostBits) - 1;
 
         // Bitwise (OR) operation
